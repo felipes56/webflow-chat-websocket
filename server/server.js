@@ -1,20 +1,25 @@
 // server/server.js
-// Servidor WebSocket sencillo para el chat colaborativo
+// Servidor HTTP + WebSocket para el chat colaborativo
 
+const http = require("http");
 const WebSocket = require("ws");
 
-// Puerto del WebSocket (puedes cambiarlo si quieres)
-const PORT = 3000;
+// En Render el puerto viene de process.env.PORT.
+// En local usamos 3000.
+const PORT = process.env.PORT || 3000;
 
-const wss = new WebSocket.Server({
-  port: PORT,
-  host: "0.0.0.0",   // 👈 acepta conexiones desde tu red
+// Servidor HTTP simple (lo necesita Render para el health check)
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("WebSocket chat server is running\n");
 });
 
+// Servidor WebSocket montado sobre el HTTP
+const wss = new WebSocket.Server({ server });
 
 let nextId = 1;
 
-console.log(`Servidor WebSocket escuchando en ws://localhost:${PORT}`);
+console.log("Iniciando servidor WebSocket...");
 
 function broadcast(obj) {
   const data = JSON.stringify(obj);
@@ -32,7 +37,6 @@ function getConnectedUsers() {
 }
 
 wss.on("connection", (ws) => {
-  // Asignar un nombre temporal por defecto
   const random = Math.floor(Math.random() * 900) + 100;
   ws.user = {
     id: nextId++,
@@ -41,7 +45,7 @@ wss.on("connection", (ws) => {
 
   console.log(`Nueva conexión: ${ws.user.name}`);
 
-  // Enviar mensaje de bienvenida solo a este cliente
+  // mensaje solo para este cliente
   ws.send(
     JSON.stringify({
       type: "welcome",
@@ -50,31 +54,29 @@ wss.on("connection", (ws) => {
     })
   );
 
-  // Avisar a todos que alguien se conectó
+  // mensaje para todos
   broadcast({
     type: "system",
     text: `${ws.user.name} se ha unido al chat`,
     timestamp: new Date().toISOString(),
   });
 
-  // Enviar la lista de usuarios conectados
+  // actualizar lista de usuarios
   broadcast({
     type: "presence",
     users: getConnectedUsers(),
   });
 
-  // Manejo de mensajes desde el cliente
   ws.on("message", (message) => {
     let data;
     try {
       data = JSON.parse(message.toString());
     } catch (e) {
-      console.error("Mensaje inválido:", message);
+      console.error("Mensaje inválido:", message.toString());
       return;
     }
 
     if (data.type === "join" && data.name) {
-      // El cliente propone un nombre
       const oldName = ws.user.name;
       ws.user.name = data.name;
 
@@ -130,4 +132,9 @@ wss.on("connection", (ws) => {
       users: getConnectedUsers(),
     });
   });
+});
+
+// Escucha en todas las interfaces (local + Render)
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Servidor HTTP+WebSocket escuchando en puerto ${PORT}`);
 });
