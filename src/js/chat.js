@@ -9,9 +9,11 @@
  *   - mensajes de sistema: usuarios que entran / salen / cambian nombre
  */
 
-// const WS_URL = "ws://localhost:3000";  // <- COMENTADO
-const WS_URL = "ws://localhost:3000";      // 👈 esta es la buena para el repo
-// const WS_URL = "ws://192.168.0.18:3000"; // 👈 comenta o borra esta
+// Para pruebas locales en tu PC:
+// const WS_URL = "ws://localhost:3000";
+
+// Para producción global (Render):
+const WS_URL = "wss://webflow-chat-websocket.onrender.com";
 
 // Elementos del DOM
 const messagesEl = document.getElementById("messages");
