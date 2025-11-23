@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Webflow Chat - Sistema colaborativo BPM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Hoja de estilos principal -->
+  <link rel="stylesheet" href="src/css/styles.css" />
+  <link rel="icon" href="assets/logo.png" />
+</head>
+<body>
+  <div class="page-shell">
+    <!-- Columna izquierda: aplicación de chat -->
+    <div class="app-card">
+      <header class="app-header">
+        <div class="brand">
+          <img src="assets/logo.png" alt="Logo Webflow Chat" class="logo" />
+          <div class="brand-text">
+            <span class="brand-pill">Proyecto BPM</span>
+            <h1>Webflow Chat</h1>
+            <p>Plataforma de mensajería para equipos de trabajo en entornos ágiles.</p>
+          </div>
+        </div>
+
+        <div class="user-info">
+          <span class="label">Usuario actual</span>
+          <span id="currentUsername" class="username-pill"></span>
+          <button id="changeNameBtn" class="btn-secondary">Cambiar nombre</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <aside class="sidebar">
+          <h2>Usuarios conectados</h2>
+          <p class="sidebar-subtitle">Se actualiza en tiempo real mediante presencia de Ably.</p>
+          <ul id="usersList"></ul>
+        </aside>
+
+        <section class="chat-panel">
+          <div class="chat-header">
+            <div>
+              <h2>Canal general</h2>
+              <p>Espacio de coordinación entre los miembros del equipo durante el sprint.</p>
+            </div>
+            <div class="status-pill">
+              <span class="dot"></span>
+              <span>Conectado</span>
+            </div>
+          </div>
+
+          <div id="messages" class="messages"></div>
+
+          <form id="messageForm" class="message-form">
+            <label for="messageInput" class="visually-hidden">Mensaje</label>
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Escribe un mensaje y presiona Enter..."
+              autocomplete="off"
+              required
+            />
+            <button type="submit" class="btn-primary">Enviar</button>
+          </form>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Sistemas colaborativos empresariales · Chat en tiempo real con WebSocket (Ably)</span>
+      </footer>
+    </div>
+
+    <!-- Columna derecha: explicación para el informe BPM -->
+    <aside class="info-card">
+      <header class="info-header">
+        <h2>Contexto BPM del proyecto</h2>
+        <p>
+          Este prototipo demuestra un <strong>sistema colaborativo</strong> para apoyar la
+          comunicación del equipo en un proceso de negocio modelado con BPMN.
+        </p>
+      </header>
+
+      <section class="info-section">
+        <h3>Proceso de negocio sugerido</h3>
+        <p>
+          El sistema puede asociarse, por ejemplo, al proceso de
+          <strong>gestión de incidencias de TI</strong> en una empresa:
+        </p>
+        <ul>
+          <li>Registro de incidencia por parte de un usuario.</li>
+          <li>Asignación al técnico responsable.</li>
+          <li>Comunicación entre equipo y usuario mediante el chat.</li>
+          <li>Cierre y documentación de la incidencia.</li>
+        </ul>
+      </section>
+
+      <section class="info-section">
+        <h3>Rol del sistema colaborativo</h3>
+        <p>Webflow Chat apoya al proceso en:</p>
+        <ul>
+          <li>Comunicación síncrona entre los miembros del equipo.</li>
+          <li>Coordinación rápida durante los sprints de trabajo (Scrum).</li>
+          <li>Visibilidad de quiénes están conectados en tiempo real.</li>
+        </ul>
+      </section>
+
+      <section class="info-section">
+        <h3>Relación con el modelo BPMN</h3>
+        <p>
+          En el diagrama BPMN se puede representar Webflow Chat como un
+          <strong>pool o lane</strong> tecnológico que apoya las tareas de coordinación,
+          intercambio de mensajes y notificación entre los actores del proceso.
+        </p>
+      </section>
+    </aside>
+  </div>
+
+        <!-- Lógica del chat en tiempo real con WebSocket -->
+      <script src="src/js/chat.js"></script>
+    </body>
+    </html>
